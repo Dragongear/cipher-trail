@@ -7,12 +7,22 @@
   "frame": {
     "version": "1",
     "name": "CipherTrail",
+    "subtitle": "Daily Mystery Hunt",
+    "description": "Solve daily puzzles with commit-reveal onchain. Prove you solved first without revealing your answer. Faster solves earn more points!",
     "iconUrl": "https://dragongear-game.vercel.app/icon.png",
     "homeUrl": "https://dragongear-game.vercel.app",
-    "imageUrl": "https://dragongear-game.vercel.app/og.png",
-    "buttonTitle": "Play CipherTrail",
     "splashImageUrl": "https://dragongear-game.vercel.app/splash.png",
     "splashBackgroundColor": "#0f0f1a",
-    "webhookUrl": "https://dragongear-game.vercel.app/api/webhook"
+    "webhookUrl": "https://dragongear-game.vercel.app/api/webhook",
+    "primaryCategory": "games",
+    "tags": ["puzzle", "onchain", "daily", "crypto", "base"],
+    "heroImageUrl": "https://dragongear-game.vercel.app/hero.png",
+    "screenshotUrls": [
+      "https://dragongear-game.vercel.app/screenshot1.png"
+    ],
+    "tagline": "Solve puzzles. Commit onchain. Earn points.",
+    "ogTitle": "CipherTrail - Daily Mystery Hunt",
+    "ogDescription": "Solve daily puzzles with commit-reveal onchain. Faster solves earn more points!",
+    "ogImageUrl": "https://dragongear-game.vercel.app/og.png"
   }
 }
