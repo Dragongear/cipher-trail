@@ -1,0 +1,10 @@
+{
+  "name": "Speed Demon",
+  "description": "Solved the puzzle within the first hour of the day",
+  "image": "https://dragongear-game.vercel.app/badges/speed-demon.png",
+  "attributes": [
+    { "trait_type": "Badge Type", "value": "Speed" },
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "Category", "value": "Time Challenge" }
+  ]
+}

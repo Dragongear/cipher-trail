@@ -33,6 +33,13 @@ export default function HomePage() {
             <span className="text-cipher-gold font-semibold">Leaderboard</span>
             <p className="text-sm text-gray-400 mt-1">Onchain points</p>
           </Link>
+          <Link
+            href="/badges"
+            className="block rounded-lg bg-cipher-card border border-gray-700 p-6 text-center hover:border-cipher-accent transition-colors"
+          >
+            <span className="text-cipher-gold font-semibold">🏅 Achievements</span>
+            <p className="text-sm text-gray-400 mt-1">Collect soulbound badges</p>
+          </Link>
         </div>
       </main>
     </div>

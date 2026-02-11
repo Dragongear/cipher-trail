@@ -5,6 +5,7 @@ import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import { getContractConfig } from "@/lib/contracts";
 import { computeCommitment, generateSalt } from "@/lib/commitment";
 import { getCurrentUTCDay } from "@/lib/constants";
+import Link from "next/link";
 
 const DAY = BigInt(getCurrentUTCDay());
 
@@ -14,6 +15,9 @@ export function CommitRevealFlow() {
   const [answer, setAnswer] = useState("");
   const [salt, setSalt] = useState<`0x${string}` | null>(null);
   const [step, setStep] = useState<"idle" | "commit" | "reveal">("idle");
+  const [badgeClaimed, setBadgeClaimed] = useState(false);
+  const [claimingBadge, setClaimingBadge] = useState(false);
+  const [earnedBadges, setEarnedBadges] = useState<number[]>([]);
 
   const { data: hasCommitted } = useReadContract({
     ...contract,
@@ -54,6 +58,27 @@ export function CommitRevealFlow() {
     setStep("reveal");
   };
 
+  const handleClaimBadge = async () => {
+    if (!address) return;
+    setClaimingBadge(true);
+    try {
+      const res = await fetch("/api/badges/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBadgeClaimed(true);
+        setEarnedBadges(data.badges || []);
+      }
+    } catch (e) {
+      console.error("Claim failed:", e);
+    } finally {
+      setClaimingBadge(false);
+    }
+  };
+
   if (!address) {
     return (
       <p className="text-gray-400 text-sm">Connect wallet to commit or reveal.</p>
@@ -62,8 +87,31 @@ export function CommitRevealFlow() {
 
   if (hasSolved) {
     return (
-      <div className="rounded-lg bg-green-900/20 border border-green-700/50 p-4 text-green-300">
-        You already solved today&apos;s puzzle.
+      <div className="rounded-lg bg-green-900/20 border border-green-700/50 p-4 space-y-4">
+        <p className="text-green-300">You already solved today&apos;s puzzle!</p>
+        
+        {!badgeClaimed ? (
+          <button
+            type="button"
+            onClick={handleClaimBadge}
+            disabled={claimingBadge}
+            className="px-4 py-2 rounded-lg bg-cipher-gold text-black font-medium disabled:opacity-50"
+          >
+            {claimingBadge ? "Claiming..." : "🏅 Claim Badge"}
+          </button>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-green-400 font-medium">Badge claimed!</p>
+            {earnedBadges.length > 0 && (
+              <p className="text-sm text-gray-300">
+                Badges earned: {earnedBadges.map(b => ["", "🎯", "🔥", "⚡", "👑", "🏆", "⏱️", "🌟"][b] || b).join(" ")}
+              </p>
+            )}
+            <Link href="/badges" className="text-cipher-accent text-sm hover:underline">
+              View all badges →
+            </Link>
+          </div>
+        )}
       </div>
     );
   }

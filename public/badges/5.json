@@ -1,0 +1,10 @@
+{
+  "name": "Top 10",
+  "description": "Finished in the top 10 solvers of the day",
+  "image": "https://dragongear-game.vercel.app/badges/top-10.png",
+  "attributes": [
+    { "trait_type": "Badge Type", "value": "Ranking" },
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "Category", "value": "Competition" }
+  ]
+}
