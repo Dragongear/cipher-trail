@@ -3,6 +3,8 @@ import { createPublicClient, http, parseAbiItem } from "viem";
 import { base, baseSepolia } from "viem/chains";
 import { getContractAddress, getChain } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const address = getContractAddress();
   if (address === "0x0000000000000000000000000000000000000000") {
