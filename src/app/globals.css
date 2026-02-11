@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* PWA safe area support */
+:root {
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+
+html {
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: contain;
+}
+
 body {
   @apply bg-cipher-dark text-gray-100 antialiased;
+  /* Safe area padding for notched devices */
+  padding-top: var(--sat);
+  padding-bottom: var(--sab);
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Improve touch targets for mobile */
+button, a {
+  @apply touch-manipulation;
+}
+
+/* Hide scrollbar on mobile but keep functionality */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Standalone PWA styling */
+@media (display-mode: standalone) {
+  header {
+    padding-top: max(0.75rem, var(--sat));
+  }
 }
