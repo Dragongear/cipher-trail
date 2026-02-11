@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Puzzle {
+  id       String  @id @default(cuid())
+  day      Int     @unique // UTC day index
+  puzzleId String  // public id for the day
+  title    String
+  content  String  // clue text
+  imageUrl String?
+  hints    String  // JSON array of hint strings
+  createdAt DateTime @default(now())
+}
+
+model HintRequest {
+  id     String @id @default(cuid())
+  wallet String
+  day    Int
+  count  Int     @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([wallet, day])
+}

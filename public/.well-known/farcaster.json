@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "REPLACE_AFTER_VERIFY",
+    "payload": "REPLACE_AFTER_VERIFY",
+    "signature": "REPLACE_AFTER_VERIFY"
+  },
+  "frame": {
+    "version": "1",
+    "name": "CipherTrail",
+    "iconUrl": "https://YOUR_APP.vercel.app/icon.png",
+    "homeUrl": "https://YOUR_APP.vercel.app",
+    "imageUrl": "https://YOUR_APP.vercel.app/og.png",
+    "buttonTitle": "Play CipherTrail",
+    "splashImageUrl": "https://YOUR_APP.vercel.app/splash.png",
+    "splashBackgroundColor": "#0f0f1a",
+    "webhookUrl": "https://YOUR_APP.vercel.app/api/webhook"
+  }
+}
