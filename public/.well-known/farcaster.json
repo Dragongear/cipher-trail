@@ -7,12 +7,12 @@
   "frame": {
     "version": "1",
     "name": "CipherTrail",
-    "iconUrl": "https://YOUR_APP.vercel.app/icon.png",
-    "homeUrl": "https://YOUR_APP.vercel.app",
-    "imageUrl": "https://YOUR_APP.vercel.app/og.png",
+    "iconUrl": "https://dragongear-game.vercel.app/icon.png",
+    "homeUrl": "https://dragongear-game.vercel.app",
+    "imageUrl": "https://dragongear-game.vercel.app/og.png",
     "buttonTitle": "Play CipherTrail",
-    "splashImageUrl": "https://YOUR_APP.vercel.app/splash.png",
+    "splashImageUrl": "https://dragongear-game.vercel.app/splash.png",
     "splashBackgroundColor": "#0f0f1a",
-    "webhookUrl": "https://YOUR_APP.vercel.app/api/webhook"
+    "webhookUrl": "https://dragongear-game.vercel.app/api/webhook"
   }
 }
