@@ -23,7 +23,7 @@ async function main() {
 
   // Create header and payload
   const header = {
-    fid: 0, // Will be assigned by Farcaster, use 0 for now
+    fid: 2689152, // pulsenet FID
     type: "custody",
     key: account.address.toLowerCase(),
   };
