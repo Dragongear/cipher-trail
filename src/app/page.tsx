@@ -40,6 +40,13 @@ export default function HomePage() {
             <span className="text-cipher-gold font-semibold">🏅 Achievements</span>
             <p className="text-sm text-gray-400 mt-1">Collect soulbound badges</p>
           </Link>
+          <Link
+            href="/tournament"
+            className="block rounded-lg bg-gradient-to-br from-amber-900/30 to-orange-900/30 border border-amber-700/50 p-6 text-center hover:border-amber-500 transition-colors"
+          >
+            <span className="text-amber-400 font-semibold">🏆 Daily Tournament</span>
+            <p className="text-sm text-gray-400 mt-1">Compete for ETH prizes</p>
+          </Link>
         </div>
       </main>
     </div>
