@@ -8,14 +8,18 @@ datasource db {
 }
 
 model Puzzle {
-  id       String  @id @default(cuid())
-  day      Int     @unique // UTC day index
-  puzzleId String  // public id for the day
-  title    String
-  content  String  // clue text
-  imageUrl String?
-  hints    String  // JSON array of hint strings
-  createdAt DateTime @default(now())
+  id         String  @id @default(cuid())
+  day        Int     @unique // UTC day index
+  puzzleId   String  // public id for the day
+  title      String
+  content    String  // clue text
+  imageUrl   String?
+  hints      String  // JSON array of hint strings
+  puzzleType String  @default("riddle") // riddle, cipher, pattern, image
+  difficulty String  @default("medium") // easy, medium, hard
+  answer     String  @default("") // the correct answer (hashed for comparison)
+  bonusMultiplier Float @default(1.0) // extra points for harder puzzles
+  createdAt  DateTime @default(now())
 }
 
 model HintRequest {

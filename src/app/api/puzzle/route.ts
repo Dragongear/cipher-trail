@@ -35,6 +35,9 @@ export async function GET(request: NextRequest) {
     content: puzzle.content,
     imageUrl: puzzle.imageUrl ?? undefined,
     hintCount: hints.length,
+    puzzleType: puzzle.puzzleType ?? "riddle",
+    difficulty: puzzle.difficulty ?? "medium",
+    bonusMultiplier: puzzle.bonusMultiplier ?? 1.0,
     // never send answer or hints content until requested via /hint
   });
 }
