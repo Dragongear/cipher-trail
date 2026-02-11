@@ -27,3 +27,21 @@ model HintRequest {
 
   @@unique([wallet, day])
 }
+
+model Referral {
+  id        String   @id @default(cuid())
+  referrer  String   // wallet address of referrer
+  referee   String   @unique // wallet address of new user
+  createdAt DateTime @default(now())
+
+  @@index([referrer])
+}
+
+model Player {
+  id            String   @id @default(cuid())
+  wallet        String   @unique
+  referralCode  String   @unique @default(cuid())
+  referralCount Int      @default(0)
+  bonusPoints   Int      @default(0)
+  createdAt     DateTime @default(now())
+}

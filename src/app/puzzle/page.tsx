@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ConnectButton } from "@/components/ConnectButton";
 import { CommitRevealFlow } from "@/components/CommitRevealFlow";
+import { ShareButton } from "@/components/ShareButton";
 import { getCurrentUTCDay } from "@/lib/constants";
 
 export default function PuzzlePage() {
@@ -115,6 +116,7 @@ export default function PuzzlePage() {
         </div>
 
         <CommitRevealFlow />
+        <ShareButton puzzleTitle={puzzle.title} />
       </main>
     </div>
   );
