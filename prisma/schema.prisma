@@ -47,5 +47,8 @@ model Player {
   referralCode  String   @unique @default(cuid())
   referralCount Int      @default(0)
   bonusPoints   Int      @default(0)
+  fid           Int?     // Farcaster ID for notifications
+  notifyDaily   Boolean  @default(false)
+  notifyStreak  Boolean  @default(false)
   createdAt     DateTime @default(now())
 }
