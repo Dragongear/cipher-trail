@@ -20,8 +20,8 @@
     "screenshotUrls": [
       "https://dragongear-game.vercel.app/screenshot1.png"
     ],
-    "tagline": "Solve puzzles. Commit onchain. Earn points.",
-    "ogTitle": "CipherTrail - Daily Mystery Hunt",
+    "tagline": "Solve. Commit. Earn.",
+    "ogTitle": "CipherTrail",
     "ogDescription": "Solve daily puzzles with commit-reveal onchain. Faster solves earn more points!",
     "ogImageUrl": "https://dragongear-game.vercel.app/og.png"
   }
