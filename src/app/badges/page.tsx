@@ -11,11 +11,13 @@ export default function BadgesPage() {
   const badgesConfig = getBadgesConfig();
 
   // Get player stats (totalSolves, streak, bestStreak, badgeCount)
-  const { data: playerStats, isLoading: loadingStats } = useReadContract({
+  const { data: playerStatsRaw, isLoading: loadingStats } = useReadContract({
     ...badgesConfig,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
   });
+  
+  const playerStats = playerStatsRaw as readonly [bigint, bigint, bigint, bigint] | undefined;
 
   // Check which badges the player has
   const { data: hasFirstSolve } = useReadContract({
