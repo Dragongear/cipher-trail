@@ -1,6 +1,6 @@
 /**
- * Deploy DailyTournament contract to Base Sepolia
- * Usage: PRIVATE_KEY=0x... npx tsx scripts/deploy-tournament.js
+ * Deploy CipherAchievements contract to Base Sepolia
+ * Usage: PRIVATE_KEY=0x... npx tsx scripts/deploy-achievements.js
  */
 import { createWalletClient, createPublicClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -14,21 +14,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const privateKey = process.env.PRIVATE_KEY;
+const gameContractAddress = process.env.GAME_CONTRACT || "0x7ac03999c30112cbbe03130af1eb7807246c0a5c";
 
 if (!privateKey) {
-  console.error("Usage: PRIVATE_KEY=0x... npx tsx scripts/deploy-tournament.js");
+  console.error("Usage: PRIVATE_KEY=0x... npx tsx scripts/deploy-achievements.js");
   process.exit(1);
 }
 
 // Read the contract source
-const contractPath = path.join(__dirname, "../contracts/src/DailyTournament.sol");
+const contractPath = path.join(__dirname, "../contracts/src/CipherAchievements.sol");
 const source = fs.readFileSync(contractPath, "utf8");
 
 // Compile the contract
 const input = {
   language: "Solidity",
   sources: {
-    "DailyTournament.sol": {
+    "CipherAchievements.sol": {
       content: source,
     },
   },
@@ -45,7 +46,7 @@ const input = {
   },
 };
 
-console.log("Compiling DailyTournament contract...");
+console.log("Compiling CipherAchievements...");
 const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
 if (output.errors) {
@@ -59,12 +60,7 @@ if (output.errors) {
   }
 }
 
-const contract = output.contracts["DailyTournament.sol"]["DailyTournament"];
-if (!contract) {
-  console.error("Contract not found in output");
-  process.exit(1);
-}
-
+const contract = output.contracts["CipherAchievements.sol"]["CipherAchievements"];
 const abi = contract.abi;
 const bytecode = "0x" + contract.evm.bytecode.object;
 
@@ -95,7 +91,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Deploying DailyTournament contract...");
+  console.log("Deploying CipherAchievements...");
 
   const hash = await walletClient.deployContract({
     abi,
@@ -109,16 +105,25 @@ async function main() {
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
   console.log("\n=================================");
-  console.log("DailyTournament deployed successfully!");
+  console.log("CipherAchievements deployed!");
   console.log("Contract address:", receipt.contractAddress);
   console.log("=================================\n");
-  console.log("Add this to your .env file:");
-  console.log(`NEXT_PUBLIC_TOURNAMENT_CONTRACT=${receipt.contractAddress}`);
 
-  // Save ABI for frontend
-  const abiPath = path.join(__dirname, "../src/lib/tournament-abi.json");
-  fs.writeFileSync(abiPath, JSON.stringify(abi, null, 2));
-  console.log("\nABI saved to:", abiPath);
+  // Set game contract
+  console.log("Setting game contract to:", gameContractAddress);
+  
+  const setGameHash = await walletClient.writeContract({
+    address: receipt.contractAddress,
+    abi,
+    functionName: "setGameContract",
+    args: [gameContractAddress],
+  });
+
+  await publicClient.waitForTransactionReceipt({ hash: setGameHash });
+  console.log("Game contract set!");
+
+  console.log("\nAdd to .env:");
+  console.log(`NEXT_PUBLIC_ACHIEVEMENTS_ADDRESS=${receipt.contractAddress}`);
 }
 
 main().catch((e) => {

@@ -1,105 +1,77 @@
 "use client";
 
-import { useAccount, useReadContract } from "wagmi";
 import Link from "next/link";
+import { useAccount, useReadContract } from "wagmi";
 import { ConnectButton } from "@/components/ConnectButton";
-import badgesAbi from "@/lib/badges-abi.json";
-
-const BADGES_CONTRACT = process.env.NEXT_PUBLIC_BADGES_CONTRACT as `0x${string}`;
-
-// Badge metadata
-const BADGE_INFO = [
-  {
-    id: 1,
-    name: "First Solve",
-    description: "Solve your first puzzle",
-    icon: "🎯",
-    rarity: "Common",
-    color: "from-green-500 to-emerald-600",
-  },
-  {
-    id: 2,
-    name: "3-Day Streak",
-    description: "Solve puzzles 3 days in a row",
-    icon: "🔥",
-    rarity: "Common",
-    color: "from-orange-400 to-red-500",
-  },
-  {
-    id: 3,
-    name: "7-Day Streak",
-    description: "A full week of puzzles",
-    icon: "⚡",
-    rarity: "Uncommon",
-    color: "from-yellow-400 to-orange-500",
-  },
-  {
-    id: 4,
-    name: "30-Day Streak",
-    description: "Legendary dedication!",
-    icon: "👑",
-    rarity: "Legendary",
-    color: "from-purple-500 to-pink-600",
-  },
-  {
-    id: 5,
-    name: "Top 10",
-    description: "Finish in daily top 10",
-    icon: "🏆",
-    rarity: "Rare",
-    color: "from-amber-400 to-yellow-500",
-  },
-  {
-    id: 6,
-    name: "Speed Demon",
-    description: "Solve in the first hour",
-    icon: "⏱️",
-    rarity: "Rare",
-    color: "from-cyan-400 to-blue-500",
-  },
-  {
-    id: 7,
-    name: "Early Adopter",
-    description: "One of the first 100 players",
-    icon: "🌟",
-    rarity: "Legendary",
-    color: "from-indigo-500 to-purple-600",
-  },
-];
-
-const RARITY_COLORS: Record<string, string> = {
-  Common: "text-gray-400",
-  Uncommon: "text-green-400",
-  Rare: "text-blue-400",
-  Legendary: "text-purple-400",
-};
+import { getBadgesConfig } from "@/lib/contracts";
+import { BADGE_INFO } from "@/lib/constants";
 
 export default function BadgesPage() {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
+  const badgesConfig = getBadgesConfig();
 
-  const { data: playerBadges, isLoading } = useReadContract({
-    address: BADGES_CONTRACT,
-    abi: badgesAbi,
-    functionName: "getPlayerBadges",
+  // Get player stats (totalSolves, streak, bestStreak, badgeCount)
+  const { data: playerStats, isLoading: loadingStats } = useReadContract({
+    ...badgesConfig,
+    functionName: "getPlayerStats",
     args: address ? [address] : undefined,
-    query: {
-      enabled: !!address && !!BADGES_CONTRACT,
-    },
   });
 
-  const { data: streakInfo } = useReadContract({
-    address: BADGES_CONTRACT,
-    abi: badgesAbi,
-    functionName: "getStreakInfo",
-    args: address ? [address] : undefined,
-    query: {
-      enabled: !!address && !!BADGES_CONTRACT,
-    },
+  // Check which badges the player has
+  const { data: hasFirstSolve } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(1)] : undefined,
+  });
+  const { data: hasStreak3 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(2)] : undefined,
+  });
+  const { data: hasStreak7 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(3)] : undefined,
+  });
+  const { data: hasStreak30 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(4)] : undefined,
+  });
+  const { data: hasSolves10 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(5)] : undefined,
+  });
+  const { data: hasSolves50 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(6)] : undefined,
+  });
+  const { data: hasSolves100 } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(7)] : undefined,
+  });
+  const { data: hasSpeedDemon } = useReadContract({
+    ...badgesConfig,
+    functionName: "hasBadge",
+    args: address ? [address, BigInt(8)] : undefined,
   });
 
-  const earnedBadges = (playerBadges as bigint[]) || [];
-  const earnedSet = new Set(earnedBadges.map((b) => Number(b)));
-  const streak = streakInfo ? Number((streakInfo as [bigint, bigint])[0]) : 0;
+  const badgeStatus: Record<number, boolean> = {
+    1: Boolean(hasFirstSolve),
+    2: Boolean(hasStreak3),
+    3: Boolean(hasStreak7),
+    4: Boolean(hasStreak30),
+    5: Boolean(hasSolves10),
+    6: Boolean(hasSolves50),
+    7: Boolean(hasSolves100),
+    8: Boolean(hasSpeedDemon),
+  };
+
+  const allBadgeIds = Object.keys(BADGE_INFO).map(Number);
+  const earnedCount = Object.values(badgeStatus).filter(Boolean).length;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -110,101 +82,85 @@ export default function BadgesPage() {
         <ConnectButton />
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
-        <h1 className="text-2xl font-bold mb-2">Achievement Badges</h1>
-        <p className="text-gray-400 text-sm mb-8">
-          Collect soulbound NFT badges for your achievements. These badges are non-transferable and prove your skills onchain!
-        </p>
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Achievements</h1>
+          <Link href="/" className="text-sm text-cipher-accent hover:underline">
+            ← Back
+          </Link>
+        </div>
 
-        {/* Stats */}
-        {isConnected && (
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="bg-cipher-card rounded-lg p-4 text-center border border-gray-700">
-              <div className="text-2xl font-bold text-cipher-gold">{earnedSet.size}</div>
-              <div className="text-gray-400 text-sm">Badges Earned</div>
-            </div>
-            <div className="bg-cipher-card rounded-lg p-4 text-center border border-gray-700">
-              <div className="text-2xl font-bold text-orange-400">{streak} 🔥</div>
-              <div className="text-gray-400 text-sm">Current Streak</div>
-            </div>
-            <div className="bg-cipher-card rounded-lg p-4 text-center border border-gray-700">
-              <div className="text-2xl font-bold text-purple-400">{7 - earnedSet.size}</div>
-              <div className="text-gray-400 text-sm">To Collect</div>
-            </div>
+        {!address ? (
+          <div className="rounded-lg bg-cipher-card border border-gray-700 p-6 text-center">
+            <p className="text-gray-400">Connect your wallet to view achievements</p>
           </div>
-        )}
-
-        {!isConnected ? (
-          <div className="text-center py-12">
-            <p className="text-gray-400 mb-4">Connect your wallet to view your badges</p>
-            <ConnectButton />
-          </div>
-        ) : isLoading ? (
-          <p className="text-gray-400">Loading badges...</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {BADGE_INFO.map((badge) => {
-              const earned = earnedSet.has(badge.id);
-              return (
-                <div
-                  key={badge.id}
-                  className={`relative rounded-xl p-6 border transition-all ${
-                    earned
-                      ? "border-cipher-gold bg-gradient-to-br " + badge.color + " bg-opacity-10"
-                      : "border-gray-700 bg-cipher-card opacity-50 grayscale"
-                  }`}
-                >
-                  {/* Badge icon */}
-                  <div className="text-4xl mb-3">{badge.icon}</div>
-
-                  {/* Badge name */}
-                  <h3 className="font-bold text-lg mb-1">{badge.name}</h3>
-
-                  {/* Description */}
-                  <p className="text-gray-300 text-sm mb-3">{badge.description}</p>
-
-                  {/* Rarity */}
-                  <span className={`text-xs font-medium ${RARITY_COLORS[badge.rarity]}`}>
-                    {badge.rarity}
-                  </span>
-
-                  {/* Earned indicator */}
-                  {earned && (
-                    <div className="absolute top-3 right-3 bg-cipher-gold text-black text-xs font-bold px-2 py-1 rounded">
-                      EARNED
-                    </div>
-                  )}
-
-                  {/* Locked indicator */}
-                  {!earned && (
-                    <div className="absolute top-3 right-3 text-gray-500">
-                      🔒
-                    </div>
-                  )}
+          <>
+            {/* Stats Card */}
+            <div className="rounded-lg bg-cipher-card border border-gray-700 p-4 mb-6">
+              <h3 className="text-cipher-gold font-semibold mb-3">Your Stats</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-gray-400">Total Solves</p>
+                  <p className="text-2xl font-bold">
+                    {playerStats ? Number(playerStats[0]) : 0}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        )}
+                <div>
+                  <p className="text-sm text-gray-400">Current Streak</p>
+                  <p className="text-2xl font-bold">
+                    {playerStats ? Number(playerStats[1]) : 0}
+                    <span className="text-sm text-gray-500 ml-1">days</span>
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Best Streak</p>
+                  <p className="text-2xl font-bold">
+                    {playerStats ? Number(playerStats[2]) : 0}
+                    <span className="text-sm text-gray-500 ml-1">days</span>
+                  </p>
+                </div>
+              </div>
+            </div>
 
-        {/* Contract link */}
-        {BADGES_CONTRACT && (
-          <p className="text-center text-gray-500 text-xs mt-8">
-            Contract:{" "}
-            <a
-              href={`https://sepolia.basescan.org/address/${BADGES_CONTRACT}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cipher-accent hover:underline"
-            >
-              {BADGES_CONTRACT.slice(0, 6)}...{BADGES_CONTRACT.slice(-4)}
-            </a>
-          </p>
+            {/* Badges Grid */}
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-cipher-gold font-semibold">All Badges</h3>
+              <span className="text-sm text-gray-400">
+                {earnedCount} / {allBadgeIds.length} earned
+              </span>
+            </div>
+            {loadingStats ? (
+              <p className="text-gray-400">Loading...</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {allBadgeIds.map((id) => {
+                  const badge = BADGE_INFO[id];
+                  const earned = badgeStatus[id];
+                  return (
+                    <div
+                      key={id}
+                      className={`rounded-lg border p-4 text-center transition-all ${
+                        earned
+                          ? "bg-cipher-card border-cipher-gold"
+                          : "bg-cipher-dark border-gray-700 opacity-50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">{badge.icon}</div>
+                      <p className="font-semibold text-sm">{badge.name}</p>
+                      <p className="text-xs text-gray-400 mt-1">{badge.description}</p>
+                      {earned && (
+                        <span className="inline-block mt-2 px-2 py-0.5 text-xs bg-cipher-gold text-black rounded">
+                          Earned
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
-
-        <Link href="/" className="text-cipher-accent mt-6 inline-block">
-          ← Back
-        </Link>
       </main>
     </div>
   );

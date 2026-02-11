@@ -1,4 +1,5 @@
-import { getContractAddress } from "./constants";
+import { getContractAddress, getBadgesAddress } from "./constants";
+import ACHIEVEMENTS_ABI from "./achievements-abi.json";
 
 export const CIPHER_TRAIL_ABI = [
   {
@@ -85,5 +86,12 @@ export function getContractConfig() {
   return {
     address: getContractAddress(),
     abi: CIPHER_TRAIL_ABI,
+  } as const;
+}
+
+export function getBadgesConfig() {
+  return {
+    address: getBadgesAddress(),
+    abi: ACHIEVEMENTS_ABI,
   } as const;
 }
