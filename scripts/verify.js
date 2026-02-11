@@ -56,8 +56,9 @@ if (output.errors) {
   }
 }
 
-// Prepare verification request
-const apiUrl = "https://api-sepolia.basescan.org/api";
+// Prepare verification request - using V2 API with chainid in URL
+const chainId = 84532; // Base Sepolia
+const apiUrl = `https://api.etherscan.io/v2/api?chainid=${chainId}`;
 
 const params = new URLSearchParams({
   apikey: apiKey,
@@ -67,7 +68,7 @@ const params = new URLSearchParams({
   sourceCode: source,
   codeformat: "solidity-single-file",
   contractname: "CipherTrail",
-  compilerversion: "v0.8.24+commit.e11b9ed9",
+  compilerversion: "v0.8.33+commit.64118f21",
   optimizationUsed: "1",
   runs: "200",
   constructorArguements: "", // no constructor args
@@ -76,6 +77,7 @@ const params = new URLSearchParams({
 
 console.log("Submitting verification to BaseScan...");
 console.log("Contract:", contractAddress);
+console.log("Chain ID:", chainId);
 
 async function verify() {
   const response = await fetch(apiUrl, {
@@ -104,7 +106,7 @@ async function verify() {
         guid: result.result,
       });
 
-      const checkResponse = await fetch(`${apiUrl}?${checkParams.toString()}`);
+      const checkResponse = await fetch(`${apiUrl}&${checkParams.toString()}`);
       const checkResult = await checkResponse.json();
       console.log("Status:", checkResult.result);
 
