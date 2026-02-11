@@ -40,6 +40,13 @@ export default function HomePage() {
             <span className="text-cipher-gold font-semibold">Achievements</span>
             <p className="text-sm text-gray-400 mt-1">Badges & streaks</p>
           </Link>
+          <Link
+            href="/tournament"
+            className="block rounded-lg bg-cipher-card border border-gray-700 p-6 text-center hover:border-cipher-accent transition-colors"
+          >
+            <span className="text-cipher-gold font-semibold">Tournament</span>
+            <p className="text-sm text-gray-400 mt-1">Weekly competition</p>
+          </Link>
         </div>
       </main>
     </div>

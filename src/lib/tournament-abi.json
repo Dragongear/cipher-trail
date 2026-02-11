@@ -9,6 +9,31 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "tournamentId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "PlayerEntered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tournamentId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "player",
         "type": "address"
@@ -16,8 +41,27 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "day",
+        "name": "points",
         "type": "uint256"
+      }
+    ],
+    "name": "PointsAwarded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tournamentId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -34,24 +78,30 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "rank",
+        "name": "startDay",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endDay",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "entryFee",
         "type": "uint256"
       }
     ],
-    "name": "PuzzleSolved",
+    "name": "TournamentCreated",
     "type": "event"
   },
   {
@@ -59,46 +109,21 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "prizePool",
-        "type": "uint256"
-      }
-    ],
-    "name": "TournamentEntered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "day",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address[]",
+        "internalType": "address[3]",
         "name": "winners",
-        "type": "address[]"
+        "type": "address[3]"
       },
       {
         "indexed": false,
-        "internalType": "uint256[]",
+        "internalType": "uint256[3]",
         "name": "prizes",
-        "type": "uint256[]"
+        "type": "uint256[3]"
       }
     ],
     "name": "TournamentFinalized",
@@ -106,20 +131,7 @@
   },
   {
     "inputs": [],
-    "name": "HOUSE_FEE_BPS",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "PRIZE_SPLIT_TOP_3",
+    "name": "WEEK_DAYS",
     "outputs": [
       {
         "internalType": "uint256",
@@ -134,7 +146,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
         "type": "uint256"
       }
     ],
@@ -147,45 +159,28 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "startDay",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "entryFee",
         "type": "uint256"
       }
     ],
-    "name": "dayParticipants",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "createTournament",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "daySolvers",
+    "inputs": [],
+    "name": "currentTournamentId",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -200,81 +195,34 @@
   },
   {
     "inputs": [],
-    "name": "enterTournament",
+    "name": "enter",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "entryFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
         "type": "uint256"
       }
     ],
-    "name": "finalizeTournament",
+    "name": "finalize",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "getCurrentDay",
+    "name": "gameContract",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "day",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
-        "name": "player",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "getParticipantStatus",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "entered",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "solved",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "rank",
-        "type": "uint256"
-      }
-    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -282,31 +230,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "day",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      }
-    ],
-    "name": "getPrize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
         "type": "uint256"
       },
       {
@@ -315,12 +239,17 @@
         "type": "uint256"
       }
     ],
-    "name": "getTopSolvers",
+    "name": "getLeaderboard",
     "outputs": [
       {
         "internalType": "address[]",
-        "name": "",
+        "name": "players",
         "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "points",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -330,12 +259,66 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getPlayerStats",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "daysPlayed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "entered",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "claimed",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tournamentId",
         "type": "uint256"
       }
     ],
-    "name": "getTournamentInfo",
+    "name": "getTournament",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "startDay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endDay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "entryFee",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "prizePool",
@@ -343,18 +326,37 @@
       },
       {
         "internalType": "uint256",
-        "name": "participantCount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "solverCount",
+        "name": "playerCount",
         "type": "uint256"
       },
       {
         "internalType": "bool",
         "name": "finalized",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tournamentId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getWinners",
+    "outputs": [
+      {
+        "internalType": "address[3]",
+        "name": "winners",
+        "type": "address[3]"
+      },
+      {
+        "internalType": "uint256[3]",
+        "name": "prizes",
+        "type": "uint256[3]"
       }
     ],
     "stateMutability": "view",
@@ -386,8 +388,18 @@
         "type": "address"
       }
     ],
-    "name": "participants",
+    "name": "playerStats",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "daysPlayed",
+        "type": "uint256"
+      },
       {
         "internalType": "bool",
         "name": "entered",
@@ -395,36 +407,7 @@
       },
       {
         "internalType": "bool",
-        "name": "solved",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "solveTime",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "prizeClaimed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
+        "name": "claimed",
         "type": "bool"
       }
     ],
@@ -440,11 +423,29 @@
       },
       {
         "internalType": "uint256",
-        "name": "day",
+        "name": "tournamentId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "points",
         "type": "uint256"
       }
     ],
-    "name": "recordSolve",
+    "name": "recordPoints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_gameContract",
+        "type": "address"
+      }
+    ],
+    "name": "setGameContract",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -453,13 +454,24 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "newFee",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "setEntryFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "tournamentPlayers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -474,12 +486,27 @@
     "outputs": [
       {
         "internalType": "uint256",
+        "name": "startDay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endDay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "entryFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "prizePool",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "participantCount",
+        "name": "playerCount",
         "type": "uint256"
       },
       {
@@ -489,19 +516,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

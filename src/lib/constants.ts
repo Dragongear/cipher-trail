@@ -15,6 +15,11 @@ export function getBadgesAddress(): `0x${string}` {
     "0x0000000000000000000000000000000000000000") as `0x${string}`;
 }
 
+export function getTournamentAddress(): `0x${string}` {
+  return (process.env.NEXT_PUBLIC_TOURNAMENT_ADDRESS ||
+    "0x0000000000000000000000000000000000000000") as `0x${string}`;
+}
+
 export function getCurrentUTCDay(): number {
   return Math.floor(Date.now() / 86400000);
 }
